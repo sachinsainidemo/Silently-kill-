@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Never Meant To Hurt You</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Lora:ital,wght@0,400;0,700;1,400&family=Courier+Prime&family=Montserrat:wght@300;400;600;700;800&family=Inter:wght@400;600&family=Birthstone&display=swap');
+
+        :root {
+            --pink-highlight: #ff2d75;
+            --hot-pink: #ff1493;
+            --pink-soft: #fff0f5;
+            --dark-base: #1a1a1a;
+            --spoiler-bg: #333333;
+            --danger-red: #ff0000;
+        }
+
+        body {
+            background: #f8fafc; 
+            font-family: 'Lora', serif;
+            color: #2d3436;
+            line-height: 1.8;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+
+        /* --- SCROLL REVEAL ANIMATION --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- VIGNETTE EFFECT --- */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            box-shadow: inset 0 0 150px rgba(0,0,0,0.07);
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* --- GRAIN/DUST TEXTURE --- */
+        .grain-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 99;
+        }
+
+        /* --- PETALS ANIMATION --- */
+        .petal {
+            position: fixed;
+            background: #ffd1dc;
+            border-radius: 150% 0 150% 0;
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: 5;
+            animation: fall 10s linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); left: var(--left); }
+            100% { transform: translateY(110vh) rotate(360deg); left: calc(var(--left) + 20px); }
+        }
+
+        /* --- STAMP EFFECT --- */
+        .vintage-stamp {
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            width: 100px; height: 100px;
+            border: 3px double #e2e8f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 0.6rem;
+            color: #cbd5e0;
+            text-transform: uppercase;
+            transform: rotate(15deg);
+            padding: 5px;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        /* Letter Container & Content Styles */
+        .letter-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: #ffffff; 
+            color: #2d3436;
+            padding: 60px 50px;
+            position: relative;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.08);
+            border-radius: 8px;
+            border: 1px solid #edf2f7;
+            z-index: 10;
+        }
+
+        .integrated-seal {
+            width: 70px;
+            height: 70px;
+            background: #8b0000;
+            border-radius: 50%;
+            margin: -95px auto 30px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #d4af37;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 0.8rem;
+            box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3), inset 0 0 10px rgba(0,0,0,0.4);
+            border: 3px solid #700000;
+            position: relative;
+            z-index: 20;
+        }
+
+        .greeting-card {
+            background: #ffffff;
+            border: 2px solid var(--hot-pink);
+            padding: 8px 20px;
+            display: inline-block;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(255, 20, 147, 0.1);
+        }
+
+        .hot-pink-text-handwritten {
+            color: var(--hot-pink) !important;
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            line-height: 1.2;
+        }
+
+        .header-bold-line {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800 !important; 
+            letter-spacing: 0.25em;
+            color: #4b5563;
+            text-transform: uppercase;
+            font-size: 11px;
+            border-top: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 6px 0;
+            display: inline-block;
+            width: 100%;
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--dark-base);
+            margin-bottom: 15px;
+            font-size: 2.2rem;
+        }
+
+        .sub-heading {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.3rem; 
+            color: #1f2937;
+            margin-bottom: 45px;
+            display: block;
+            font-weight: 700;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            opacity: 1; 
+            text-decoration: underline;
+            text-decoration-color: var(--hot-pink);
+            text-underline-offset: 8px;
+        }
+
+        .hl-pink { background: var(--pink-soft); color: #d63384; padding: 0 4px; border-radius: 2px; font-weight: 700; }
+        .hl-black { background: #f1f2f6; color: #000; padding: 0 4px; border-radius: 2px; font-weight: 700; }
+        .underline-black { border-bottom: 3px solid #1a1a1a; font-weight: 700; }
+        
+        .main-highlight {
+            color: #000;
+            font-weight: 800;
+            background-color: #fff176;
+            padding: 0 4px;
+            border-radius: 3px;
+        }
+
+        .suspense-spoiler {
+            background-color: var(--spoiler-bg);
+            color: transparent;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            border-radius: 4px;
+            padding: 0 6px;
+            user-select: none;
+        }
+        .suspense-spoiler:hover {
+            background-color: #fdf2f8;
+            color: var(--hot-pink);
+            box-shadow: 0 0 10px rgba(255, 20, 147, 0.2);
+        }
+
+        .quote-block {
+            font-style: italic;
+            text-align: center;
+            color: #1a202c;
+            margin: 40px 0;
+            padding: 30px;
+            border-top: 1px solid #cbd5e0;
+            border-bottom: 1px solid #cbd5e0;
+            font-size: 1.1rem;
+            position: relative;
+            font-weight: 600;
+        }
+
+        .quote-block::before {
+            content: "“";
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3rem;
+            color: #a0aec0;
+            font-family: serif;
+        }
+
+        .pink-callout-quote {
+            background: linear-gradient(to right, #fff5f7, #fff);
+            border-left: 6px solid var(--hot-pink);
+            padding: 25px;
+            margin: 40px 0;
+            border-radius: 0 15px 15px 0;
+            box-shadow: 5px 5px 15px rgba(255, 20, 147, 0.08);
+            font-style: italic;
+            color: #111;
+            position: relative;
+            font-weight: 600;
+        }
+
+        .pink-callout-quote::after {
+            content: "❤";
+            position: absolute;
+            right: 15px;
+            bottom: 10px;
+            color: var(--hot-pink);
+            opacity: 0.3;
+            font-size: 1.5rem;
+        }
+
+        .minimal-quote {
+            text-align: center;
+            margin: 45px 0;
+            padding: 20px;
+            border: 2px dashed #cbd5e0;
+            border-radius: 4px;
+            font-family: 'Lora', serif;
+            font-style: italic;
+            color: #334155;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        /* --- POLAROID PHOTO STYLES --- */
+        .photo-memories {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .polaroid, .polaroid-broad {
+            background: white;
+            padding: 15px 15px 40px 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 1px solid #eee;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .polaroid { transform: rotate(-3deg); max-width: 320px; }
+        .polaroid-broad { transform: rotate(2deg); max-width: 380px; width: 95%; padding: 18px 18px 50px 18px; }
+
+        .polaroid-xl {
+            transform: rotate(1deg);
+            max-width: 580px; 
+            width: 100%;
+            background: white;
+            padding: 25px 25px 80px 25px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            border: 1px solid #eee;
+            transition: all 0.5s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            margin: 30px auto;
+        }
+
+        .polaroid-xl:hover { transform: scale(1.03) rotate(0deg); z-index: 20; }
+        
+        .polaroid img, .polaroid-broad img, .polaroid-xl img { 
+            width: 100%; 
+            height: auto; 
+            border-radius: 2px; 
+            filter: blur(15px) brightness(0.8);
+            transition: filter 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .polaroid.revealed img, .polaroid-broad.revealed img, .polaroid-xl.revealed img {
+            filter: blur(0px) brightness(1);
+        }
+
+        .polaroid-broad img { 
+            filter: sepia(1) grayscale(0.5) contrast(1.2);
+            transition: filter 2s ease;
+        }
+        .polaroid-broad.revealed img {
+            filter: sepia(0) grayscale(0) contrast(1);
+        }
+
+        .polaroid .caption, .polaroid-broad .caption, .polaroid-xl .caption { 
+            font-family: 'Dancing Script', cursive; 
+            text-align: center; 
+            font-size: 1.4rem; 
+            margin-top: 20px; 
+            color: #444; 
+        }
+
+        /* --- FINAL NOTE & MESSAGES --- */
+        .final-note-box {
+            margin-top: 60px;
+            border: 2px solid #1a1a1a;
+            padding: 30px;
+            background: #ffffff;
+            position: relative;
+            text-align: center;
+        }
+
+        .final-note-title {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a1a1a;
+            color: white;
+            padding: 4px 20px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+        }
+
+        .clean-regret-section {
+            padding: 40px 0 80px 0; 
+            text-align: center;
+        }
+
+        .soft-line {
+            height: 1px;
+            width: 70%;
+            max-width: 400px;
+            background: linear-gradient(to right, transparent, var(--hot-pink), transparent);
+            margin: 20px auto 40px auto;
+            opacity: 0.4;
+        }
+
+        .simple-message {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.2rem;
+            color: #1e293b;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-style: italic;
+            font-weight: 700;
+        }
+
+        .page-break { margin: 50px 0; text-align: center; color: #cbd5e0; font-size: 1.5rem; letter-spacing: 1rem; }
+        
+        .heart-divider { display: flex; align-items: center; justify-content: center; gap: 15px; margin: 40px 0; opacity: 0.4; }
+        .heart-divider .line { height: 1px; width: 60px; background: #cbd5e0; }
+        .tiny-heart { font-size: 0.8rem; color: #a0aec0; }
+
+        .corner { position: absolute; width: 40px; height: 40px; border: 2px solid var(--hot-pink); opacity: 0.3; }
+        .top-left { top: 30px; left: 30px; border-right: none; border-bottom: none; }
+        .bottom-right { bottom: 30px; right: 30px; border-left: none; border-top: none; }
+
+        .footer-end-text { font-family: 'Montserrat', sans-serif; font-weight: 400; font-size: 0.7rem; letter-spacing: 0.15em; color: #94a3b8; text-transform: uppercase; }
+
+        .signature-svg { width: 320px; height: 100px; overflow: visible; }
+        .signature-path {
+            stroke: #1a1a1a;
+            stroke-width: 1.5;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 1200;
+            stroke-dashoffset: 1200;
+            transition: stroke-dashoffset 4s ease-out;
+        }
+        .reveal.active .signature-path { stroke-dashoffset: 0; }
+
+        /* --- AI FEATURES --- */
+        .ai-analysis-btn {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .ai-analysis-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4);
+        }
+
+        #ai-result-box {
+            display: none;
+            background: #fdf2f8;
+            border: 2px solid #f9a8d4;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            color: #1e293b;
+            text-align: left;
+            position: relative;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .loading-dots:after {
+            content: '.';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60% { content: '...'; }
+            80%, 100% { content: ''; }
+        }
+
+        /* --- DANGER SECTION STYLES --- */
+        .risk-trigger-container { 
+            margin-top: 40px; 
+            text-align: center; 
+            border-top: 1px solid #ef4444; 
+            padding-top: 30px; 
+        }
+        
+        #secret-trigger {
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 14px 28px;
+            border-radius: 8px;
+            background: #ffffff;
+            border: 2px solid #ef4444;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+            width: auto;
+        }
+
+        #secret-trigger:hover {
+            border-color: #000;
+            background: #fffafa;
+            transform: scale(1.02);
+        }
+
+        .risk-icon-danger { 
+            font-size: 1.4rem; 
+            animation: warningPulse 0.8s infinite alternate; 
+        }
+
+        .risk-text-danger {
+            font-family: 'Inter', sans-serif;
+            color: #ef4444;
+            font-weight: 900;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .zoom-pulse-line {
+            display: block;
+            animation: zoomPulse 2s ease-in-out infinite;
+            transform-origin: center;
+        }
+
+        .warning-label-simple {
+            display: block;
+            color: #4b5563;
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            margin-bottom: 12px;
+            letter-spacing: 0.2px;
+            line-height: 1.6;
+        }
+
+        .final-warning-block {
+            text-align: center;
+            margin-top: 25px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+            text-decoration: underline;
+        }
+
+        .final-warning-line {
+            font-weight: 900;
+            color: #ef4444;
+            font-size: 0.85rem;
+            display: block;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        @keyframes zoomPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes warningPulse { from { opacity: 0.7; transform: scale(1); } to { opacity: 1; transform: scale(1.1); } }
+
+        #secret-message {
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: #000; padding: 50px; border-radius: 4px; box-shadow: 0 0 100px rgba(239, 68, 68, 0.5);
+            z-index: 10000; width: 90%; max-width: 550px; border: 2px solid #ef4444; text-align: center; color: white;
+        }
+
+        .overlay-dark { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(15px); z-index: 9999; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 640px) {
+            .letter-container { padding: 40px 20px; margin: 100px 10px 40px 10px; }
+            .sub-heading { font-size: 1.7rem; }
+            h1 { font-size: 1.5rem; }
+            .vintage-stamp { top: 15px; right: 15px; width: 70px; height: 70px; }
+            .signature-svg { width: 260px; height: 80px; }
+            .polaroid-xl { padding: 15px 15px 50px 15px; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<audio id="bg-music" loop>
+    <source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+function startMusic() {
+    const music = document.getElementById('bg-music');
+    music.play().catch(err => {
+        console.log("Play blocked:", err);
+    });
+}
+
+document.addEventListener('click', startMusic, { once: true });
+document.addEventListener('touchstart', startMusic, { once: true });
+</script>
+    <div class="grain-overlay"></div>
+    <div id="petals-container"></div>
+
+    <!-- Secret Message Popup -->
+    <div id="overlay-dark" class="overlay-dark" onclick="closeSecret()"></div>
+    <div id="secret-message">
+        <div class="mb-4 text-xs font-mono text-red-500 uppercase tracking-widest">Decrypted Secret Confession</div>
+        <div class="font-bold text-2xl text-white italic" style="font-family: 'Dancing Script', cursive;">
+            "Jis din se maine tumhe jean kurti aur punjabi jutti m dekha ha i loose my control aur bhut khush tha ush din se lekin abbbb idk but Thanks us video k lie 💫🤌🏻🐣🌸"
+        </div>
+        <button class="mt-8 border border-red-500 px-6 py-2 text-red-500 text-xs tracking-widest hover:bg-red-500 hover:text-white transition-all uppercase font-bold" onclick="closeSecret()">Terminate Session</button>
+    </div>
+
+    <!-- Main Letter Content -->
+    <div id="main-content">
+        <div class="letter-container">
+            <div class="integrated-seal">#SAM</div>
+            <div class="vintage-stamp">SEALED &<br>FINAL<br>#SAM1803</div>
+            <div class="corner top-left"></div>
+            <div class="corner bottom-right"></div>
+
+            <header class="text-center mb-12">
+                <h1>I Never Meant To Hurt You</h1>
+                <span class="sub-heading">"A chapter I couldn't keep..."</span>
+                <div class="header-bold-line">PERSONAL & CONFIDENTIAL • PUBLISHED BY #SAM1803 • MAY 2026</div>
+                
+                <!-- Gemini Integration Button -->
+                <button class="ai-analysis-btn" onclick="analyzeLetter()">
+                    <span>✨ Understand My Feelings</span>
+                </button>
+                <div id="ai-result-box">
+                    <p id="ai-text"></p>
+                </div>
+            </header>
+
+            <section class="content">
+                <div class="greeting-card reveal">
+                    <p class="hot-pink-text-handwritten">Hey Sonam Rajput 🌸</p>
+                </div>
+
+                <div id="letter-body-text">
+                    <p class="reveal">
+                        Hope you are doing well. <span class="main-highlight">This is the final gift for you from my side 😭.</span> Let’s proceed, and I am sure you will understand and feel it. I would like to say—it was a lesson for me. Or we can say it was a <span class="hl-black">chapter of a book</span> which has been turned now. Let’s focus on the new chapter and <span class="main-highlight">start the new beginning from zero</span>, because in a book, all chapters are different 🌸. <span class="italic block my-4 border-l-4 border-pink-500 pl-4 text-gray-700 font-semibold">In simple words, life is like a book with all non-equal chapters. Sometimes there is a bad guide, sometimes a good one.</span> It depends, but I am wishing you a <span class="hl-pink">very, very bright future</span>, my dear loved one 🙂🥺.
+                    </p>
+
+                    <div class="pink-callout-quote reveal">
+                        "Whatever I have done, or you have done, matters no more to me! It was a phase for both of us."
+                    </div>
+
+                    <p class="mt-6 reveal">
+                        I wasn't able to complete your words, I didn't obey your orders, <span class="main-highlight">I always let you feel down, and I ignored you on top of everything without any reason.</span> If I had one, I would have shared it with you, but I couldn't do that. <span class="underline-black">The time which I spent now, these last few weeks, was memorable</span> because explaining it is a very complicated thing for me. If I started to elucidate your presence with me in chats, it might take the <span class="font-bold text-red-600 bg-red-50 p-0.5">full night</span> or even tomorrow 😀. It was a phase for both of us, Sonam, because we both have our private lives with different goals, intentions, and many more things.
+                    </p>
+
+                    <p class="mt-6 reveal">
+                        The decision you took before was your personal choice because of me (I could say)—never understanding you, showing attitude, ignorance, using bad words, not caring, etc. <span class="main-highlight">It was a good decision as per your perspective</span>; if I were in your place as a girl, I might have chosen the same as you, <span class="font-bold underline text-gray-900">doll</span>. We both have different genders and faced issues caused by me or somehow by you. I never tried to understand you in the starting days when I left India. I know I should have informed you, but <span class="main-highlight">I couldn't do it 😭 even if I wanted to.</span>
+                    </p>
+
+                    <div class="page-break reveal"></div>
+
+                    <p class="mt-6 reveal">
+                        Sonam, the past is the past. Moving away for you may be easy, mild, or severe, but for me, I have no need to say, right <span class="font-bold text-red-600 underline decoration-red-300">Sonam?</span> <span class="main-highlight">The more we think about the past, the more we will hurt ourselves.</span> 
+                        <span class="block my-6 border-l-4 border-gray-400 pl-6 italic text-gray-800 font-medium bg-gray-50 p-4 rounded">
+                            "The first meetup, your sudden lip kiss in a restaurant without even thinking for a minute..."
+                        </span>
+                        Afterward you were afraid, and I handled the situation, gave you a warm hug, and kept you calm. The next one: somebody’s guy that you know saw us together, and again you were scared, but <span class="main-highlight">I always protect and support you.</span>
+                    </p>
+
+                    <div class="minimal-quote reveal">"Sometimes you have to close a book, not because you've finished the story, but because the next chapter isn't meant for you."</div>
+
+                    <p class="mt-6 reveal">
+                        Let’s proceed to that moment when I made my friend act as a security guard downstairs to keep us safe. <span class="hl-black">The shop owner was already on our side hahahah</span>, but there was a fear of the owner; still, he took the risk for us. Remember, we looked at each other; you were trying not to see my face, but I did it properly and you learned too, <span class="hl-pink">Sam</span>. We did lots of things that day, but we <span class="line-through text-red-400 font-bold">never ever completed any food</span> in a restaurant 😅. How could we eat? We were both lost in each other hahahha.
+                    </p>
+
+                    <p class="mt-6 font-extrabold text-center text-2xl text-gray-900 tracking-widest uppercase reveal border-y-2 border-gray-100 py-2">✨ THE MAIN TOPIC ✨</p>
+
+                    <p class="mt-4 reveal">
+                        Now the main topic starts. I hope you remembered the day when I planned a surprise for you. By asking tricky questions, I got the size of your fingers. I diverted your non-working mind to other things. When we arrived at the restaurant, I said, <span class="main-highlight">"Close your eyes and do not open them without my permission,"</span> swearing on our love ❤️. You agreed and closed both eyes, then, then, then... 
+                        <span class="suspense-spoiler">I placed both ring boxes in front of you, opening both so you could see them with your eyes and I could see your reaction.</span> It was really a <span class="highlight">shocking reaction on your face</span>, as well as a lovingly smile 😊 on your pyara sa face.
+                    </p>
+
+                    <div class="photo-memories reveal">
+                        <div class="polaroid" onclick="this.classList.toggle('revealed')">
+                            <img src="https://i.ibb.co/MyC98Nk5/IMG-3263.jpg" alt="Our Ring Memory">
+                            <div class="caption">Our Forever 💍❤️ (Tap to Unblur)</div>
+                        </div>
+                    </div>
+
+                    <p class="reveal mt-6">
+                        And one of the main reasons for fear was how you could take them home. But as a brave BF, I suggested something. By following the advice, you took both rings home and kept them safe. At the acceptance time, <span class="main-highlight">you were blushing a lot like a new bride 👰.</span> The fact is, yeah, you are a <span class="underline-black">queen who needs a king 👑</span> so he can keep her safe and fulfill all the dreams which you deserved, <span class="font-bold text-pink-600 underline">Sam 😚.</span>
+                    </p>
+
+                    <div class="page-break reveal">⌛</div>
+
+                    <div class="mt-12 mb-12 reveal">
+                        <h2 class="font-extrabold text-center text-2xl text-gray-900 tracking-tight uppercase">An unforgettable last meet up</h2>
+                        <p class="text-center italic text-gray-500 text-lg mb-6 font-semibold">"The memory that stays forever..."</p>
+                        <div class="p-8 border-2 border-dashed border-pink-400 rounded-3xl bg-pink-50/50 mb-10 shadow-sm">
+                            <p class="text-xl leading-relaxed text-gray-900 font-bold">Sonam mujhe abhi. Bhi yaad ha hamara wo <span class="main-highlight">last meet up</span>, wo <span class="underline-black">tumhe ghar se laana</span> enjoy krna baate krna hsna and i still memorise and regreting ki agar mujhe sch ma pata hota ye hamari <span class="main-highlight">akhiri mulakat</span> ha toh ma shayad uss din tumhe <span class="underline-black">jaane hi nahi deta</span> 🫂🥺💔🥀</p>
+                        </div>
+                        <div class="photo-memories">
+                            <div class="polaroid-broad" onclick="this.classList.toggle('revealed')">
+                                <img src="https://i.ibb.co/gMCb3mvB/IMG-3278.jpg" alt="Our Last Meetup">
+                                <div class="caption">A Day To Remember... (Tap to Reveal Color) 🕊️✨</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="mt-6 reveal">
+                        Countless times I said that I want one thing: <span class="hl-black">your protection of yourself.</span> I was like a <span class="main-highlight">mentor to guide you</span> and you followed. But with the passage of time, everything changed. I should always have maintained calmness, but I couldn’t, which affected our relationship due to <span class="main-highlight">my faults 🥺.</span> What more could I say? I am sorry for hurting you 🫠. I know you have a big heart and you will definitely forgive me, <span class="font-bold text-gray-900 underline decoration-pink-500">Sonam 🤌🏻.</span>
+                    </p>
+
+                    <div class="quote-block reveal">"Always take care of yourself, mama, papa, and Kris... respect them well and you will get the same in return."</div>
+
+                    <p class="mt-8 font-extrabold underline decoration-gray-400 decoration-4 mb-4 text-gray-900 text-xl reveal">Last but not least: Be confident.</p>
+                    <p class="reveal">
+                        Never ever trap yourself in someone’s plan, please 🙏🏽. <span class="main-highlight">Before taking a step, think a thousand times 🫂.</span> Take care of your health, especially <span class="hl-pink">mental as well as physical health 👥.</span> Stay away from bad people in college specifically. Never be afraid of someone—you are brave and you can handle it. Never get attached easily to someone—I am advising you because <span class="main-highlight">I know you more than you know yourself.</span>
+                    </p>
+
+                    <div class="mt-10 p-6 bg-pink-50 border-l-8 border-pink-500 rounded-r-lg reveal shadow-sm">
+                        <p class="text-gray-900 italic font-bold">
+                            And yes, <span class="suspense-spoiler">I went to AIIMS yesterday and am taking treatment, including psychiatric treatment medicine, but do not worry.</span> Be cool and calm; I will be better soon. Due to overthinking, I wasn’t able to accept this yesterday, but now the truth is on your table ☺️😊. <span class="main-highlight">Grateful to have had you with me 😣😫.</span>
+                        </p>
+                    </div>
+
+                    <p class="mt-10 text-xl font-extrabold border-t-2 border-gray-100 pt-8 reveal text-center">
+                        It is hesitant to say a painful 😣 goodbye to my love, but <span class="main-highlight">I failed to understand it 🙂</span> <span class="text-red-700 font-mono text-sm border-b-2 border-red-200">(Failed in love)</span>. Take care, my love—<span class="font-bold text-pink-700 underline decoration-hot-pink decoration-2">Sonam Rajput 🥺.</span> It’s time to go now 😭.
+                    </p>
+
+                    <div class="clean-regret-section reveal">
+                        <p class="simple-message">Kaash main tumhe samajh paata… 💔😭🥀</p>
+                        <div class="soft-line"></div>
+                        
+                        <div class="photo-memories">
+                            <div class="polaroid-xl" onclick="this.classList.toggle('revealed')">
+                                <img src="https://i.ibb.co/0R4nL0pY/a1e77253-a830-4dfd-a1b1-2128243bf2ff.jpg" alt="Final Memory Image">
+                                <div class="caption">Picture is different but mujhe aaj bhi yaad ha jab ham phli baar milee thy in person aur ham dono gaadi m gy thy then you suddenly hold my hand… <span class="font-bold text-gray-900 underline">Forgetting first meeting isn’t that much easy 😭 🕊️✨</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="reveal mt-6 font-medium">There might be something missing, but I added mostly all that I remembered. Again, take care, my princess. <span class="font-extrabold text-red-600 underline decoration-red-200">Good Bye ✋ 😞</span></p>
+                </div>
+
+                <div class="mt-16 flex flex-col items-start border-t-2 border-gray-50 pt-10 reveal">
+                    <p class="text-xs uppercase tracking-widest text-gray-500 mb-2 font-bold">With Love,</p>
+                    <div class="sig-box">
+                        <svg class="signature-svg" viewBox="0 0 400 100">
+                            <path class="signature-path" d="M20,60 C40,20 60,80 80,40 C100,0 120,60 140,30 C160,0 180,60 200,40 C220,20 240,60 260,40 C280,20 300,60 320,40 C340,20 360,60 380,40"/>
+                            <text x="20" y="65" font-family="'Birthstone', cursive" font-size="60" fill="none" stroke="#1a1a1a" stroke-width="1.2">Rohin Singh Saini</text>
+                        </svg>
+                        <p class="italic text-gray-900 font-bold border-t-2 border-pink-100 mt-2 pt-2 text-sm">#sam1803 — ALWAYS WITH YOU</p>
+                    </div>
+                    <div class="mt-4 text-gray-800 text-sm font-semibold italic">There is where i stop now … 🫡💫🥺🥺</div>
+                </div>
+
+                <div class="heart-divider reveal"><div class="line"></div><div class="tiny-heart">💔</div><div class="line"></div></div>
+
+                <div class="final-note-box reveal shadow-lg border-hot-pink border-2">
+                    <div class="final-note-title">FINAL MESSAGE</div>
+                    <p class="text-gray-900 text-sm sm:text-base font-bold italic">Jo qismat m na ho wo mandir ma puja krne se bhi nhi milta 😭💔🙂</p>
+                </div>
+
+                <p class="mt-12 text-center footer-end-text reveal font-bold">— End of the final chapter. Moving forward with peace. —</p>
+
+                <div class="risk-trigger-container reveal">
+                    <div class="zoom-pulse-line">
+                        <span class="warning-label-simple font-medium">
+                            It may leak your private/secret data <b class="text-gray-900">Sonam</b> aur haan agar aisa kuch hua toh mai iske liye responsible nhi hunga yaad rkhio.<br>
+                            <span class="font-extrabold text-red-600 mt-2 block underline">You must deal with that situation if it happens, because i already warned and informed you. High alert 🚨</span>
+                        </span>
+                    </div>
+
+                    <div id="secret-trigger" onclick="showSecret()">
+                        <span class="risk-icon-danger">☢️</span>
+                        <span class="risk-text-danger">FINAL ‼️ CAUTION : PROCEED ONLY AT YOUR OWN RISK</span>
+                        <span class="risk-icon-danger">⚡</span>
+                    </div>
+
+                    <div class="final-warning-block">
+                        <span class="final-warning-line underline decoration-red-600 decoration-2">Last warning : Think thrice before opening it 👁️</span>
+                        <span class="final-warning-line underline decoration-red-600 decoration-2">One big mistake can lead your life into hell ✅</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // API Configuration
+        const apiKey = "";
+        const observerOptions = { threshold: 0.1 };
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, observerOptions);
+
+        window.onload = () => {
+            document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+            setInterval(createPetal, 700);
+        };
+
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.className = 'petal';
+            petal.style.setProperty('--left', Math.random() * 100 + 'vw');
+            const size = Math.random() * 15 + 10;
+            petal.style.width = size + 'px'; petal.style.height = size + 'px';
+            document.getElementById('petals-container').appendChild(petal);
+            setTimeout(() => petal.remove(), 10000);
+        }
+
+        async function analyzeLetter() {
+            const resultBox = document.getElementById('ai-result-box');
+            const aiText = document.getElementById('ai-text');
+            const letterText = document.getElementById('letter-body-text').innerText;
+            
+            resultBox.style.display = 'block';
+            aiText.innerHTML = '<span class="loading-dots">Analyzing deep emotions</span>';
+
+            const systemPrompt = "You are an empathetic emotional analyst. Read the provided letter and provide a 3-sentence summary that highlights the writer's underlying love, deep regret, and a supportive final wish for the recipient. Speak directly to 'Sonam' in a very soft, respectful, and emotional tone. Use Hindi (Latin) script. Add 🕊️✨ emojis.";
+            const userQuery = `Analyze this letter for Sonam: ${letterText}`;
+
+            try {
+                let response = await callGemini(systemPrompt, userQuery);
+                aiText.innerText = response;
+            } catch (error) {
+                aiText.innerText = "Error analyzing emotions. Please try again later.";
+            }
+        }
+
+        async function callGemini(systemPrompt, userQuery, retries = 5) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: userQuery }] }],
+                            systemInstruction: { parts: [{ text: systemPrompt }] }
+                        })
+                    });
+
+                    if (!response.ok) throw new Error('API request failed');
+
+                    const data = await response.json();
+                    return data.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf kijiye, main abhi kuch keh nahi paa raha hoon.";
+                } catch (e) {
+                    if (i === retries - 1) throw e;
+                    await new Promise(res => setTimeout(res, Math.pow(2, i) * 1000));
+                }
+            }
+        }
+
+        function showSecret() {
+            document.getElementById('overlay-dark').style.display = 'block';
+            document.getElementById('secret-message').style.display = 'block';
+        }
+
+        function closeSecret() {
+            document.getElementById('overlay-dark').style.display = 'none';
+            document.getElementById('secret-message').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

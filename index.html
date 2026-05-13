@@ -1,0 +1,526 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>I Never Meant To Hurt You</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Lora:ital,wght@0,400;0,700;1,400&family=Courier+Prime&family=Montserrat:wght@600;700;800&family=Inter:wght@300;400;500;600;700;900&display=swap');
+
+        :root {
+            --pink-highlight: #ff2d75;
+            --hot-pink: #ff1493;
+            --paper-dark: #0f0f0f; 
+            --pure-white: #ffffff;
+            --faded-white: rgba(255, 255, 255, 0.6);
+        }
+
+        body {
+            background: #000; 
+            font-family: 'Lora', serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .grain {
+            position: fixed;
+            inset: 0;
+            background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 50000;
+        }
+
+        /* --- BIOMETRIC OVERLAY --- */
+        #intro-overlay {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%);
+            z-index: 100000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            padding: 30px;
+        }
+
+        .biometric-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            max-width: 350px;
+            width: 100%;
+        }
+
+        .intro-message-box {
+            margin-bottom: 25px;
+            animation: slowFadeIn 2.5s ease-out;
+        }
+
+        .curiosity-text {
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            color: #888;
+            letter-spacing: 1.5px;
+            margin-bottom: 25px;
+            font-weight: 900;
+            animation: zoomInOut 3s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        @keyframes zoomInOut {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.15); opacity: 1; }
+        }
+
+        .main-emotional-line {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            color: #fff;
+            line-height: 1.6;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .sub-emotional-line {
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color: #ff1493;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .last-logged-line {
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            color: #444;
+            margin-top: 5px;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        .fingerprint-icon {
+            width: 90px;
+            height: 90px;
+            color: #1a1a1a;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            padding: 10px;
+            border: 1.5px solid rgba(255, 20, 147, 0.05);
+            border-radius: 50%;
+        }
+
+        .fingerprint-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: currentColor;
+        }
+
+        .fingerprint-icon.scanning {
+            color: var(--hot-pink);
+            filter: drop-shadow(0 0 25px var(--hot-pink));
+            transform: scale(0.92);
+        }
+
+        .scan-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--hot-pink);
+            box-shadow: 0 0 20px var(--hot-pink);
+            display: none;
+            z-index: 10;
+        }
+
+        .status-text {
+            font-family: 'Courier Prime', monospace;
+            font-size: 10px;
+            color: #444;
+            margin-top: 15px;
+            letter-spacing: 3px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        @keyframes slowFadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- ENVELOPE DARK STYLES --- */
+        #password-screen {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            perspective: 2000px;
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+
+        .archive-envelope {
+            width: 90%;
+            max-width: 460px;
+            height: auto;
+            min-height: 580px;
+            background: var(--paper-dark); 
+            padding: 30px 25px;
+            position: relative;
+            box-shadow: 0 30px 90px rgba(255,255,255,0.02), inset 0 0 40px rgba(0,0,0,0.5);
+            border-radius: 8px;
+            border: 1px solid #222;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .official-rubber-stamp {
+            position: absolute;
+            top: 40px;
+            right: 25px;
+            font-family: 'Courier Prime', monospace;
+            font-size: 10px;
+            color: var(--pure-white);
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            border: 2px solid var(--pure-white);
+            padding: 4px 10px;
+            transform: rotate(-10deg); 
+            user-select: none;
+            opacity: 0.6;
+            z-index: 5;
+        }
+
+        .focal-instruction {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900; 
+            color: var(--pure-white);
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            margin-top: 65px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            letter-spacing: 0.15em;
+        }
+
+        .thunder-pulse {
+            display: inline-block;
+            animation: iconPulse 1.5s ease-in-out infinite;
+            color: var(--hot-pink);
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 2px var(--hot-pink)); }
+            50% { transform: scale(1.4); opacity: 0.7; filter: drop-shadow(0 0 10px var(--hot-pink)); }
+        }
+
+        .shimmer-text {
+            background: linear-gradient(90deg, #666 0%, #fff 50%, #666 100%);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: textShimmer 4s infinite linear;
+            font-weight: 950;
+        }
+
+        .wax-seal {
+            width: 70px; height: 70px;
+            background: #1a1a1a;
+            border-radius: 50%;
+            margin: 0 auto 8px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--pure-white);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.8);
+            border: 2px solid #333;
+            animation: sealPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes sealPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 8px 20px rgba(0,0,0,0.8); }
+            50% { transform: scale(1.1); box-shadow: 0 0 25px rgba(255, 20, 147, 0.4); }
+        }
+
+        .archive-title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 1.05rem;
+            margin-bottom: 12px;
+            letter-spacing: 0.05em;
+            position: relative;
+            padding-bottom: 5px;
+            color: var(--hot-pink);
+        }
+        
+        .archive-title::after {
+            content: '';
+            position: absolute;
+            left: 20%; bottom: 0; width: 60%; height: 2px; background: var(--pure-white);
+        }
+
+        .pass-input {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            border: none;
+            border-bottom: 1.5px dashed rgba(255,255,255,0.2);
+            padding: 8px;
+            text-align: center;
+            font-size: 1.5rem;
+            letter-spacing: 8px;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+            color: var(--pure-white);
+            caret-color: var(--hot-pink);
+        }
+
+        #error-text {
+            font-size: 10px;
+            color: var(--hot-pink);
+            margin-top: 8px;
+            font-style: italic;
+            font-weight: 700;
+            opacity: 0; 
+            transition: 0.5s;
+        }
+        #error-text.show { opacity: 1; }
+
+        .envelope-msg {
+            font-family: 'Inter', sans-serif;
+            color: var(--faded-white);
+            font-size: 0.82rem;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .highlight-important {
+            color: var(--pure-white);
+            font-weight: 800;
+            border-bottom: 1px solid var(--hot-pink);
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+        }
+
+        .highlight-name {
+            color: var(--hot-pink);
+            font-weight: 800;
+        }
+
+        .personal-note-section {
+            margin-top: 20px;
+            padding: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 4px;
+            text-align: left;
+            position: relative;
+        }
+
+        .note-header {
+            font-family: 'Inter', sans-serif;
+            font-size: 8px;
+            font-weight: 900;
+            letter-spacing: 1.2px;
+            color: var(--hot-pink);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .note-content {
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            color: #888;
+            line-height: 1.4;
+            font-style: italic;
+        }
+
+        .note-strong {
+            color: var(--pure-white);
+            font-weight: 700;
+        }
+
+        .glowing-white-line {
+            color: #fff;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.8), 0 0 12px rgba(255, 255, 255, 0.4);
+            font-style: italic;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        #final-status {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 60000;
+            color: white;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px;
+        }
+
+        @keyframes textShimmer { to { background-position: 200% center; } }
+    </style>
+</head>
+<body>
+</script>
+    <div class="grain"></div>
+
+    <!-- BIOMETRIC INTRO (UNTOUCHED) -->
+    <div id="intro-overlay">
+        <div class="biometric-container">
+            <div class="intro-message-box">
+                <p class="curiosity-text">[STATUS]: GATHERING NIGHTS OF SILENCE... 😊</p>
+                <h2 class="main-emotional-line">लोग कहते हैं कि मर्द अपनी पसंदीदा औरत की खुशी के लिए कुछ भी कर सकता है...</h2>
+                <h3 class="sub-emotional-line">तो लो, मैंने कर दिया 😊</h3>
+                <p class="last-logged-line italic opacity-50">Last seen: In that unforgettable memory...</p>
+            </div>
+
+            <div class="fingerprint-icon" id="fingerprint" onclick="startScan()">
+                <svg viewBox="0 0 24 24">
+                    <path d="M17.81 4.47c-.08 0-.16-.02-.23-.06C15.66 3.42 14 3 12.01 3c-1.98 0-3.86.47-5.57 1.41-.24.13-.54.04-.67-.2-.13-.24-.04-.55.2-.68C7.82 2.52 9.86 2 12.01 2c2.12 0 3.99.47 5.57 1.39.24.14.32.45.18.69-.1.15-.25.24-.39.39zm1.48 5.03c-.28 0-.53-.18-.6-.46-.07-.3-.02-.62.24-.8l.24-.16c.36-.21.49-.64.33-1.01-.15-.36-.54-.53-.94-.41-.53.18-1.01.4-1.42.66-.23.14-.54.08-.68-.14-.14-.23-.08-.54.15-.68.49-.3 1.05-.56 1.66-.77.82-.28 1.76-.08 2.38.52.56.55.81 1.39.61 2.21l-.24.16c-.15.11-.31.17-.48.17zM12 22c-.3 0-.54-.24-.54-.54s.24-.54.54-.54c3.03 0 5.5-2.47 5.5-5.5 0-.3.24-.54.54-.54s.54.24.54.54c0 3.64-2.96 6.6-6.6 6.6zm0-2.2c-.3 0-.54-.24-.54-.54V16.3c0-.3.24-.54.54-.54s.54.24.54.54v2.96c0 .3-.24.54-.54.54zm-2.41-4.06c-.24 0-.45-.16-.52-.4-.14-.49-.21-.99-.21-1.5 0-1.73 1.41-3.14 3.14-3.14s3.14 1.41 3.14 3.14c0 .3-.24.54-.54.54s-.54-.24-.54-.54c0-1.13-.92-2.05-2.05-2.05s-2.05.92-2.05 2.05c0 .41.06.82.16 1.2.08.28-.08.59-.36.67-.06.02-.12.03-.17.03z"/>
+                </svg>
+                <div class="scan-bar" id="scan-bar"></div>
+            </div>
+            
+            <div class="status-text" id="status-label">Authorize to unlock memories</div>
+        </div>
+    </div>
+
+    <!-- ENVELOPE SCREEN (UNTOUCHED) -->
+    <div id="password-screen">
+        <div class="archive-envelope" id="envelope">
+            <div class="official-rubber-stamp">PROPERTY OF ARCHIVE<br>VERIFIED: MAY 2026</div>
+
+            <div class="focal-instruction">
+                <span class="thunder-pulse">⚡</span>
+                <span class="shimmer-text">READ IT SLOWLY, FEEL EVERY WORD, THEN REACT.</span>
+            </div>
+
+            <div class="envelope-msg">
+                देख <span class="highlight-name">Sonam</span>, जो भी है, मैं उसे <span class="highlight-important">बदल नहीं सकता</span>। सच ये है कि मुझे खुद नहीं पता चल रहा मैं क्या कर रहा हूँ। पिछले कई दिनों से पूरी-पूरी रात जाग रहा हूँ, सो नहीं पा रहा। ये बस खुद को <span class="highlight-important">torture</span> करने वाली बात है। 📱💤
+            </div>
+
+            <div class="center-focal-point mt-4">
+                <div class="wax-seal">#SAM</div>
+                <p class="archive-title">Private Memory Archive</p>
+                
+                <p class="text-[9px] font-bold tracking-widest mb-1 uppercase" style="color: var(--pure-white);">The letter is protected</p>
+                <p class="text-[7px] mb-3 uppercase font-sans glowing-white-line">ONLY THE RIGHT PERSON KNOWS THE KEY TO THESE MEMORIES 🧠</p>
+                
+                <div class="w-full max-w-[180px] flex flex-col items-center mx-auto">
+                    <input type="password" id="password-field" class="pass-input" placeholder="••••" maxlength="4" autofocus>
+                </div>
+                
+                <p class="text-[10px] font-bold mt-4 tracking-[0.1em] font-sans" style="color: var(--pure-white);">Hint: #SAM</p>
+                <p id="error-text">❤️ “Some memories are only meant for one person.”</p>
+            </div>
+
+            <div class="envelope-msg mt-auto pt-4 border-t border-white/5">
+                जो <b>realization</b> तुमने मुझे दी है, उसके बेसिस पर मैंने इस लेटर में हर एक <span class="highlight-important">sacchaai</span> लिखी है। ✨<br>
+                इसमें ना कोई झूठ है, ना कोई sugar coating. बस एक कोशिश है कि तुम इसे <span class="highlight-important">understand</span> कर पाओ। 🕊️❤️
+            </div>
+
+            <div class="personal-note-section">
+                <span class="note-header">Personal Note</span>
+                <div class="note-content">
+                    Yeh letter <span class="note-strong">maine khud likha hai</span>, from my own feelings aur thoughts 💭❤️. Every word is <span class="note-strong">original</span>, no copy from anywhere. I only used internet aur AI tools just to design aur present it better ✍️✨, but jo <span class="note-strong">emotions, words aur meaning hai wo completely meri taraf se represent hain</span> 🤍.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FINAL STATUS (REPLACING THE LETTER PORTION) -->
+    <div id="final-status">
+        <div>
+            <p class="text-pink-500 text-xs tracking-[0.5em] mb-10 uppercase font-black">Archive Access</p>
+            <p class="text-2xl italic leading-relaxed px-4 mb-4" style="font-family: 'Dancing Script', cursive;">
+                "Memory Vault Unlocked."
+            </p>
+            <p class="text-[10px] tracking-widest uppercase opacity-40">System Idle - End of Session</p>
+        </div>
+    </div>
+
+    <script>
+        let scanProgress = 0;
+        let scanInterval;
+
+        function startScan() {
+            const fingerprint = document.getElementById('fingerprint');
+            const scanBar = document.getElementById('scan-bar');
+            const label = document.getElementById('status-label');
+
+            fingerprint.classList.add('scanning');
+            scanBar.style.display = 'block';
+            label.innerText = 'PROCESSING EMOTIONS...';
+
+            scanInterval = setInterval(() => {
+                scanProgress += 1.5; 
+                scanBar.style.top = scanProgress + '%';
+                
+                if (scanProgress >= 100) {
+                    clearInterval(scanInterval);
+                    label.innerText = 'ACCESS GRANTED';
+                    label.style.color = '#ff1493';
+                    
+                    setTimeout(() => {
+                        document.getElementById('intro-overlay').style.opacity = '0';
+                        setTimeout(() => {
+                            document.getElementById('intro-overlay').remove();
+                            const passScreen = document.getElementById('password-screen');
+                            passScreen.style.display = 'flex';
+                            setTimeout(() => {
+                                passScreen.style.opacity = '1';
+                                document.getElementById('password-field').focus();
+                            }, 50);
+                        }, 1000);
+                    }, 800);
+                }
+            }, 80); 
+        }
+
+        const passField = document.getElementById('password-field');
+        const errorText = document.getElementById('error-text');
+        const envelope = document.getElementById('envelope');
+
+        document.addEventListener('mousemove', (e) => {
+            if (!envelope) return;
+            const x = (window.innerWidth / 2 - e.pageX) / 40;
+            const y = (window.innerHeight / 2 - e.pageY) / 40;
+            envelope.style.transform = `rotateY(${x}deg) rotateX(${-y}deg)`;
+        });
+
+        passField.addEventListener('input', (e) => {
+            const val = e.target.value;
+            errorText.classList.remove('show');
+            if (val.length === 4) {
+                if (val === '1803') {
+                    window.location.href = "letter.html";
+                    errorText.classList.add('show');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
