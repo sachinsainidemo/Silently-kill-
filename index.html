@@ -1,62 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>For Sonam</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: #fff5f5;
-      color: #333;
-    }
-    #locked-screen {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      text-align: center;
-      padding: 20px;
-    }
-    #timer {
-      background: #8B0000;
-      color: white;
-      padding: 20px 40px;
-      border-radius: 15px;
-      font-size: 32px;
-      font-weight: bold;
-      margin: 20px 0;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-    }
-    #letter-content {
-      display: none;
-      padding: 40px 20px;
-      max-width: 800px;
-      margin: 0 auto;
-      line-height: 1.8;
-    }
-    .welcome-msg {
-      font-size: 28px;
-      color: #8B0000;
-      font-weight: bold;
-      margin-bottom: 30px;
-      text-align: center;
-    }
-  </style>
-</head>
-<body>
 
-  <!-- 22 HOURS TAK YE DIKHEGA -->
-  <div id="locked-screen">
-    <h2 style="color:#8B0000">Hey Sonam 🌸</h2>
-    <p style="font-size:18px; color:#555">This letter will unlock after</p>
-    <div id="timer">22:00:00</div>
-    <p style="color:#777; max-width:400px">Please come back after the countdown ends. Something special is waiting for you.</p>
-  </div>
-
-  <!-- 22 HOURS BAAD YE DIKHEGA
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -443,6 +385,72 @@
 </head>
 <body>
 </script>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timer</title>
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    background: #0f0f1a;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+#timer {
+    font-size: 3rem;
+    margin-top: 20px;
+    color: #6c63ff;
+}
+</style>
+</head>
+
+<body>
+
+<div>
+    <h1>Unlock Timer</h1>
+    <div id="timer"></div>
+</div>
+
+<script>
+function updateTimer() {
+    let now = new Date();
+    let target = new Date();
+    target.setHours(20,0,0,0); // 8 PM
+
+    let diff = target - now;
+
+    if(diff <= 0) {
+        document.getElementById("timer").innerText = "Unlocked";
+        return;
+    }
+
+    let h = Math.floor(diff / (1000 * 60 * 60));
+    let m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    let s = Math.floor((diff % (1000 * 60)) / 1000);
+
+    document.getElementById("timer").innerText =
+        h + "h " + m + "m " + s + "s";
+}
+
+setInterval(updateTimer, 1000);
+updateTimer();
+</script>
+
+</body>
+</html>
     <div class="grain"></div>
 
     <!-- BIOMETRIC INTRO (UNTOUCHED) -->
