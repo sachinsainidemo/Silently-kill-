@@ -389,7 +389,9 @@
 
     <!-- BIOMETRIC INTRO (UNTOUCHED) -->
     <div id="intro-overlay">
-        <div class="biometric-container">
+        <div class="<div style="margin-top:15px; font-family:Courier Prime; color:#ff1493;">
+    <div id="timer" style="font-size:18px; font-weight:700;"></div>
+</div>">
             <div class="intro-message-box">
                 <p class="curiosity-text">[STATUS]: GATHERING NIGHTS OF SILENCE... 😊</p>
                 <h2 class="main-emotional-line">लोग कहते हैं कि मर्द अपनी पसंदीदा औरत की खुशी के लिए कुछ भी कर सकता है...</h2>
@@ -520,7 +522,30 @@
                     errorText.classList.add('show');
                 }
             }
-        });
+        // ===== 8 PM TIMER SYSTEM =====
+function updateTimer() {
+    let now = new Date();
+    let target = new Date();
+    target.setHours(20,0,0,0); // 8 PM
+
+    let diff = target - now;
+
+    if(diff <= 0) {
+        document.getElementById("timer").innerText = "UNLOCKED ✨";
+        document.getElementById("status-label").innerText = "SYSTEM UNLOCKED";
+        return;
+    }
+
+    let h = Math.floor(diff / (1000 * 60 * 60));
+    let m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    let s = Math.floor((diff % (1000 * 60)) / 1000);
+
+    document.getElementById("timer").innerText =
+        h + "h " + m + "m " + s + "s LEFT";
+}
+
+setInterval(updateTimer, 1000);
+updateTimer();});
     </script>
 </body>
 </html>
