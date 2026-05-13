@@ -384,7 +384,7 @@
     </style>
 </head>
 <body>
-</script>
+</script> 
     <div class="grain"></div>
 
     <!-- BIOMETRIC INTRO (UNTOUCHED) -->
@@ -522,30 +522,6 @@
                     errorText.classList.add('show');
                 }
             }
-        // ===== 8 PM TIMER SYSTEM =====
-function updateTimer() {
-    let now = new Date();
-    let target = new Date();
-    target.setHours(20,0,0,0); // 8 PM
-
-    let diff = target - now;
-
-    if(diff <= 0) {
-        document.getElementById("timer").innerText = "UNLOCKED ✨";
-        document.getElementById("status-label").innerText = "SYSTEM UNLOCKED";
-        return;
-    }
-
-    let h = Math.floor(diff / (1000 * 60 * 60));
-    let m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    let s = Math.floor((diff % (1000 * 60)) / 1000);
-
-    document.getElementById("timer").innerText =
-        h + "h " + m + "m " + s + "s LEFT";
-}
-
-setInterval(updateTimer, 1000);
-updateTimer();});
     </script>
 </body>
 </html>
