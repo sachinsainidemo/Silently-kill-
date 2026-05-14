@@ -466,115 +466,128 @@
         </div>
     </div>
 
-    <script>
-        let scanProgress = 0;
-        let scanInterval;
+  <script>
+let scanProgress = 0;
+let scanInterval;
 
-        function startScan() {
-            const fingerprint = document.getElementById('fingerprint');
-            const scanBar = document.getElementById('scan-bar');
-            const label = document.getElementById('status-label');
+/* ===== TIMER ===== */
 
-            fingerprint.classList.add('scanning');
-            scanBar.style.display = 'block';
-            label.innerText = 'PROCESSING EMOTIONS...';
+function updateTimer() {
 
-            scanInterval = setInterval(() => {
-                scanProgress += 1.5; 
-                scanBar.style.top = scanProgress + '%';
-                
-                if (scanProgress >= 100) {
-                    clearInterval(scanInterval);
-                    label.innerText = 'ACCESS GRANTED';
-                    label.style.color = '#ff1493';
-                    
+    let now = new Date();
+    let target = new Date();
+
+    target.setHours(21, 0, 0, 0); // 9 PM
+
+    let diff = target - now;
+
+    if (diff <= 0) {
+        document.getElementById("timer").innerText = "UNLOCKED ✨";
+        return;
+    }
+
+    let h = Math.floor(diff / 3600000);
+    let m = Math.floor((diff % 3600000) / 60000);
+    let s = Math.floor((diff % 60000) / 1000);
+
+    document.getElementById("timer").innerText =
+        "🔒 Opens In: " + h + "h " + m + "m " + s + "s";
+}
+
+setInterval(updateTimer, 1000);
+updateTimer();
+
+/* ===== SCAN ===== */
+
+function startScan() {
+
+    let now = new Date();
+
+    if (now.getHours() < 21) {
+        alert("⚠️ Access Locked Until 9 PM");
+        return;
+    }
+
+    const fingerprint = document.getElementById('fingerprint');
+    const scanBar = document.getElementById('scan-bar');
+    const label = document.getElementById('status-label');
+
+    fingerprint.classList.add('scanning');
+    scanBar.style.display = 'block';
+    label.innerText = 'PROCESSING EMOTIONS...';
+
+    scanInterval = setInterval(() => {
+
+        scanProgress += 1.5;
+        scanBar.style.top = scanProgress + '%';
+
+        if (scanProgress >= 100) {
+
+            clearInterval(scanInterval);
+
+            label.innerText = 'ACCESS GRANTED';
+            label.style.color = '#ff1493';
+
+            setTimeout(() => {
+
+                document.getElementById('intro-overlay').style.opacity = '0';
+
+                setTimeout(() => {
+
+                    document.getElementById('intro-overlay').remove();
+
+                    const passScreen =
+                        document.getElementById('password-screen');
+
+                    passScreen.style.display = 'flex';
+
                     setTimeout(() => {
-                        document.getElementById('intro-overlay').style.opacity = '0';
-                        setTimeout(() => {
-                            document.getElementById('intro-overlay').remove();
-                            const passScreen = document.getElementById('password-screen');
-                            passScreen.style.display = 'flex';
-                            setTimeout(() => {
-                                passScreen.style.opacity = '1';
-                                document.getElementById('password-field').focus();
-                            }, 50);
-                        }, 1000);
-                    }, 800);
-                }
-            }, 80); 
+                        passScreen.style.opacity = '1';
+                        document.getElementById('password-field').focus();
+                    }, 50);
+
+                }, 1000);
+
+            }, 800);
         }
 
-        const passField = document.getElementById('password-field');
-        const errorText = document.getElementById('error-text');
-        const envelope = document.getElementById('envelope');
-
-        document.addEventListener('mousemove', (e) => {
-            if (!envelope) return;
-            const x = (window.innerWidth / 2 - e.pageX) / 40;
-            const y = (window.innerHeight / 2 - e.pageY) / 40;
-            envelope.style.transform = `rotateY(${x}deg) rotateX(${-y}deg)`;
-        });
-/* ===== TIMER LOCK ===== */
-
-function updateTimer(){
-
-let now = new Date();
-
-let target = new Date();
-
-target.setHours(21,0,0,0); // 9 PM
-
-let diff = target - now;
-
-if(diff <= 0){
-
-document.getElementById("timer").innerText = "UNLOCKED ✨";
-
-return;
-
+    }, 80);
 }
 
-let h = Math.floor(diff / 3600000);
+/* ===== PASSWORD ===== */
 
-let m = Math.floor((diff % 3600000) / 60000);
+const passField = document.getElementById('password-field');
+const errorText = document.getElementById('error-text');
+const envelope = document.getElementById('envelope');
 
-let s = Math.floor((diff % 60000) / 1000);
+document.addEventListener('mousemove', (e) => {
 
-document.getElementById("timer").innerText =
-"🔒 Opens In: " + h + "h " + m + "m " + s + "s";
+    if (!envelope) return;
 
-}
+    const x = (window.innerWidth / 2 - e.pageX) / 40;
+    const y = (window.innerHeight / 2 - e.pageY) / 40;
 
-/* BLOCK BEFORE 9 PM */
+    envelope.style.transform =
+        `rotateY(${x}deg) rotateX(${-y}deg)`;
+});
 
-document.getElementById("fingerprint").onclick = function(){
+passField.addEventListener('input', (e) => {
 
-let now = new Date();
+    const val = e.target.value;
 
-if(now.getHours() < 21){
+    errorText.classList.remove('show');
 
-alert("⚠️ Access Locked Until 9 PM");
+    if (val.length === 4) {
 
-return;
+        if (val === '1803') {
 
-}
+            window.location.href = "letter.html";
 
-startScan();
+        } else {
 
-};
+            errorText.classList.add('show');
 
-setInterval(updateTimer,1000);
-
-updateTimer();
-        passField.addEventListener('input', (e) => {
-            const val = e.target.value;
-            errorText.classList.remove('show');
-            if (val.length === 4) {
-                if (val === '1803') {
-                    window.location.href = "letter.html";
-                    errorText.classList.add('show');
-                }
-            }
-    </script>
-</body>
-</html>
+        }
+    }
+});
+</script>
