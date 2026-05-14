@@ -382,7 +382,43 @@
         @keyframes textShimmer { to { background-position: 200% center; } }
     </style>
 </head>
-<body>
+<body><!-- FAKE MEMORY LOADING SYSTEM -->
+<div id="memory-loader" style="
+position:fixed;
+inset:0;
+background:#000;
+z-index:999999;
+display:none;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+color:white;
+font-family:Inter;
+">
+
+    <div style="font-size:12px; letter-spacing:4px; opacity:0.6; margin-bottom:20px;">
+        ACCESSING MEMORY VAULT
+    </div>
+
+    <div style="width:260px; height:2px; background:#111; overflow:hidden; position:relative;">
+        <div id="memory-bar" style="
+            width:0%;
+            height:100%;
+            background:#ff1493;
+            box-shadow:0 0 20px #ff1493;
+            transition:0.2s;
+        "></div>
+    </div>
+
+    <div id="memory-text" style="
+        margin-top:20px;
+        font-size:10px;
+        letter-spacing:2px;
+        opacity:0.7;
+    ">
+        INITIALIZING...
+    </div>
+</div>
     <div class="grain"></div>
 
     <!-- BIOMETRIC INTRO (UNTOUCHED) -->
@@ -519,7 +555,53 @@ function startScan() {
         scanProgress += 1.5;
         scanBar.style.top = scanProgress + '%';
 
-        if (scanProgress >= 100) {
+        if (progress >= 100) {
+
+    clearInterval(interval);
+
+    text.innerText = "CRITICAL ERROR DETECTED";
+
+    setTimeout(() => {
+
+        // show fake corruption screen
+        document.getElementById("memory-error").style.display = "flex";
+
+    }, 500);
+
+    // fake recovery sequence
+    setTimeout(() => {
+
+        document.getElementById("memory-error").innerHTML = `
+            <div style="font-size:14px; letter-spacing:6px; font-weight:900;">
+                ATTEMPTING RECOVERY...
+            </div>
+        `;
+
+    }, 2000);
+
+    // final recovery → continue to letter
+    setTimeout(() => {
+
+        document.getElementById("memory-error").innerHTML = `
+            <div style="font-size:14px; letter-spacing:6px; font-weight:900;">
+                MEMORY RESTORED ✓
+            </div>
+        `;
+
+    }, 4000);
+
+    setTimeout(() => {
+
+        document.getElementById("memory-error").style.opacity = "0";
+
+        setTimeout(() => {
+            document.getElementById("memory-error").remove();
+            loader.remove();
+            if (callback) callback();
+        }, 800);
+
+    }, 5500);
+}
 
             clearInterval(scanInterval);
 
