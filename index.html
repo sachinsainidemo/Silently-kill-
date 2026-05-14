@@ -389,9 +389,11 @@
 
     <!-- BIOMETRIC INTRO (UNTOUCHED) -->
     <div id="intro-overlay">
-        <div class="<div style="margin-top:15px; font-family:Courier Prime; color:#ff1493;">
+        <div style="margin-top:15px; font-family:'Courier Prime'; color:#ff1493; text-align:center;">
     <div id="timer" style="font-size:18px; font-weight:700;"></div>
-</div>">
+</div>
+
+<div class="biometric-container">
             <div class="intro-message-box">
                 <p class="curiosity-text">[STATUS]: GATHERING NIGHTS OF SILENCE... 😊</p>
                 <h2 class="main-emotional-line">लोग कहते हैं कि मर्द अपनी पसंदीदा औरत की खुशी के लिए कुछ भी कर सकता है...</h2>
@@ -512,7 +514,58 @@
             const y = (window.innerHeight / 2 - e.pageY) / 40;
             envelope.style.transform = `rotateY(${x}deg) rotateX(${-y}deg)`;
         });
+/* ===== TIMER LOCK ===== */
 
+function updateTimer(){
+
+let now = new Date();
+
+let target = new Date();
+
+target.setHours(21,0,0,0); // 9 PM
+
+let diff = target - now;
+
+if(diff <= 0){
+
+document.getElementById("timer").innerText = "UNLOCKED ✨";
+
+return;
+
+}
+
+let h = Math.floor(diff / 3600000);
+
+let m = Math.floor((diff % 3600000) / 60000);
+
+let s = Math.floor((diff % 60000) / 1000);
+
+document.getElementById("timer").innerText =
+"🔒 Opens In: " + h + "h " + m + "m " + s + "s";
+
+}
+
+/* BLOCK BEFORE 9 PM */
+
+document.getElementById("fingerprint").onclick = function(){
+
+let now = new Date();
+
+if(now.getHours() < 21){
+
+alert("⚠️ Access Locked Until 9 PM");
+
+return;
+
+}
+
+startScan();
+
+};
+
+setInterval(updateTimer,1000);
+
+updateTimer();
         passField.addEventListener('input', (e) => {
             const val = e.target.value;
             errorText.classList.remove('show');
