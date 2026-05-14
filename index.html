@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -158,18 +157,17 @@
 
         /* --- ENVELOPE DARK STYLES --- */
         #password-screen {
-    position: fixed;
-    inset: 0;
-    background: #000;
-    z-index: 10000;
-
-    display: none;
-    opacity: 0;
-    align-items: center;
-    justify-content: center;
-
-    transition: opacity 1s ease;
-}
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            perspective: 2000px;
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
 
         .archive-envelope {
             width: 90%;
@@ -391,6 +389,7 @@
     <div id="intro-overlay">
         <div style="font-family:'Courier Prime'; color:#ff1493; text-align:center; position:absolute; top:25px; left:50%; transform:translateX(-50%); width:100%; z-index:99999;">
     <div id="timer" style="font-size:18px; font-weight:700;"></div>
+</div>
 
 <div class="biometric-container">
             <div class="intro-message-box">
@@ -502,7 +501,7 @@ function startScan() {
 
     let now = new Date();
 
-     if (now.getHours() < 21) {
+    if (now.getHours() < 21) {
         alert("⚠️ Access Locked Until 9 PM");
         return;
     }
@@ -533,16 +532,15 @@ function startScan() {
 
                 setTimeout(() => {
 
-                    document.getElementById('intro-overlay').style.display = 'none';
+                    document.getElementById('intro-overlay').remove();
+
                     const passScreen =
                         document.getElementById('password-screen');
 
                     passScreen.style.display = 'flex';
 
-setTimeout(() => {
-    passScreen.style.opacity = '1';
-}, 50);
-
+                    setTimeout(() => {
+                        passScreen.style.opacity = '1';
                         document.getElementById('password-field').focus();
                     }, 50);
 
