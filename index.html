@@ -511,7 +511,7 @@ function updateTimer() {
     let now = new Date();
     let target = new Date();
 
-    target.setHours(21, 0, 0, 0); // 9 PM
+    target.setHours(23, 0, 0, 0); // 11 PM
 
     let diff = target - now;
 
@@ -537,8 +537,8 @@ function startScan() {
 
     let now = new Date();
 
-    if (now.getHours() < 21) {
-        alert("⚠️ Access Locked Until 9 PM");
+    if (now.getHours() < 23) {
+        alert("⚠️ Access Locked Until 11 PM");
         return;
     }
 
