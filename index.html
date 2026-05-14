@@ -158,17 +158,18 @@
 
         /* --- ENVELOPE DARK STYLES --- */
         #password-screen {
-            position: fixed;
-            inset: 0;
-            background: #000;
-            z-index: 10000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            perspective: 2000px;
-            opacity: 0;
-            transition: opacity 2s ease;
-        }
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 10000;
+
+    display: none;
+    opacity: 0;
+    align-items: center;
+    justify-content: center;
+
+    transition: opacity 1s ease;
+}
 
         .archive-envelope {
             width: 90%;
@@ -532,15 +533,16 @@ function startScan() {
 
                 setTimeout(() => {
 
-                    document.getElementById('intro-overlay').remove();
-
+                    document.getElementById('intro-overlay').style.display = 'none';
                     const passScreen =
                         document.getElementById('password-screen');
 
                     passScreen.style.display = 'flex';
 
-                    setTimeout(() => {
-                        passScreen.style.opacity = '1';
+setTimeout(() => {
+    passScreen.style.opacity = '1';
+}, 50);
+
                         document.getElementById('password-field').focus();
                     }, 50);
 
