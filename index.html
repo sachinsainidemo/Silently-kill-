@@ -550,58 +550,43 @@ function startScan() {
     scanBar.style.display = 'block';
     label.innerText = 'PROCESSING EMOTIONS...';
 
+    let progress = 0;
+
     scanInterval = setInterval(() => {
 
-        scanProgress += 1.5;
-        scanBar.style.top = scanProgress + '%';
+        progress += 1.5;
+        scanBar.style.top = progress + '%';
+
+        // ⚠️ FAKE CORRUPTION MOMENT
+        if (progress > 45 && progress < 47) {
+
+            clearInterval(scanInterval);
+
+            label.innerText = "MEMORY CORRUPTED ⚠️";
+            label.style.color = "#ff1493";
+
+            setTimeout(() => {
+
+                label.innerText = "ATTEMPTING RECOVERY...";
+
+            }, 1500);
+
+            setTimeout(() => {
+
+                label.innerText = "MEMORY RESTORED ✓";
+
+            }, 3500);
+
+            setTimeout(() => {
+
+                startScan(); // resume scan after fake error
+
+            }, 5000);
+
+            return;
+        }
 
         if (progress >= 100) {
-
-    clearInterval(interval);
-
-    text.innerText = "CRITICAL ERROR DETECTED";
-
-    setTimeout(() => {
-
-        // show fake corruption screen
-        document.getElementById("memory-error").style.display = "flex";
-
-    }, 500);
-
-    // fake recovery sequence
-    setTimeout(() => {
-
-        document.getElementById("memory-error").innerHTML = `
-            <div style="font-size:14px; letter-spacing:6px; font-weight:900;">
-                ATTEMPTING RECOVERY...
-            </div>
-        `;
-
-    }, 2000);
-
-    // final recovery → continue to letter
-    setTimeout(() => {
-
-        document.getElementById("memory-error").innerHTML = `
-            <div style="font-size:14px; letter-spacing:6px; font-weight:900;">
-                MEMORY RESTORED ✓
-            </div>
-        `;
-
-    }, 4000);
-
-    setTimeout(() => {
-
-        document.getElementById("memory-error").style.opacity = "0";
-
-        setTimeout(() => {
-            document.getElementById("memory-error").remove();
-            loader.remove();
-            if (callback) callback();
-        }, 800);
-
-    }, 5500);
-}
 
             clearInterval(scanInterval);
 
@@ -633,7 +618,6 @@ function startScan() {
 
     }, 80);
 }
-
 /* ===== PASSWORD ===== */
 
 const passField = document.getElementById('password-field');
